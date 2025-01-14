@@ -121,4 +121,4 @@ components:
       scheme: bearer
 security:
   - oauth2: []
-  - http: []
+  - http: [https://www.googleapis.com/auth/cloud-platform]

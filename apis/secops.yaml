@@ -910,4 +910,4 @@ components:
       type: http
       scheme: bearer
 security:
-  - http: []
+  - http: [https://www.googleapis.com/auth/cloud-platform]
