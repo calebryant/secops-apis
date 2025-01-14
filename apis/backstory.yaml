@@ -112,13 +112,14 @@ components:
     oauth2:
       type: oauth2
       flows:
-        clientCredentials:
+        authorizationCode:
+          authorizationUrl: https://accounts.google.com/o/oauth2/auth
           tokenUrl: https://oauth2.googleapis.com/token
           scopes:
-            https://www.googleapis.com/auth/cloud-platform: ""
+            https://www.googleapis.com/auth/chronicle-backstory: ""
     http:
       type: http
       scheme: bearer
 security:
-  - oauth2: []
-  - http: [https://www.googleapis.com/auth/cloud-platform]
+  - oauth2: ["https://www.googleapis.com/auth/chronicle-backstory"]
+  - http: []
