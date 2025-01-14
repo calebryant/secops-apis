@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   description: Backstory API Specification
-  title: Backstory API
+  title: SecOps Backstory API
   version: v1
 servers:
 - url: "https://backstory.googleapis.com/v1"
@@ -10,9 +10,22 @@ servers:
     region:
       default: europe
       enum:
-      - europe
-      - europe-west2
-      - asia-southeast1
+        - southamerica-east1
+        - northamerica-northeast2
+        - me-central2
+        - me-central1
+        - europe
+        - europe-west3
+        - europe-west2
+        - asia-south1
+        - europe-west9
+        - asia-southeast1
+        - australia-southeast1
+        - me-west1
+        - asia-northeast1
+        - europe-west12
+        - backstory.googleapis.com
+        - europe-west6
 paths:
   /tools/cbnParsers:
     get:
@@ -55,18 +68,28 @@ paths:
                 $ref: "#/components/schemas/ListCustomersResponse"
       tags:
       - customer
+  /partner/customer/getcustomer:
+    parameters:
+      - name: customer_code
+        in: query
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: GetCustomers
+      responses:
+        200:
+          description: Customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+      tags:
+      - customer
 components:
   schemas:
     Customer:
-      properties:
-        id:
-          type: string
-        customerId:
-          type: string
-        customerCode:
-          type: string
-        customerName:
-          type: string
+      type: object
     Parser:
       properties:
         config:
@@ -93,5 +116,9 @@ components:
           tokenUrl: https://oauth2.googleapis.com/token
           scopes:
             https://www.googleapis.com/auth/cloud-platform: ""
+    http:
+      type: http
+      scheme: bearer
 security:
   - oauth2: []
+  - http: []

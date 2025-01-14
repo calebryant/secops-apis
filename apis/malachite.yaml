@@ -10,19 +10,22 @@ servers:
     region:
       default: europe
       enum:
-      - northamerica-northeast2
-      - me-central2
-      - me-central1
-      - europe
-      - europe-west3
-      - europe-west2
-      - asia-south1
-      - asia-southeast1
-      - australia-southeast1
-      - me-west1
-      - asia-northeast1
-      - europe-west12
-      - europe-west6
+        - southamerica-east1
+        - northamerica-northeast2
+        - me-central2
+        - me-central1
+        - europe
+        - europe-west3
+        - europe-west2
+        - asia-south1
+        - europe-west9
+        - asia-southeast1
+        - australia-southeast1
+        - me-west1
+        - asia-northeast1
+        - europe-west12
+        - backstory.googleapis.com
+        - europe-west6
   /unstructuredlogentries:batchCreate:
     post:
       operationId: BatchCreateUnstructuredLogEntries
@@ -69,3 +72,17 @@ components:
           format: int64
         ts_rfc3339:
           type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth2.googleapis.com/token
+          scopes:
+            https://www.googleapis.com/auth/cloud-platform: ""
+    http:
+      type: http
+      scheme: bearer
+security:
+  - oauth2: []
+  - http: []
