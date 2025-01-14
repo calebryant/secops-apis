@@ -1,0 +1,71 @@
+openapi: 3.1.0
+info:
+  description: Malachite API Specification
+  title: Malachite API
+  version: v2
+servers:
+- url: "https://malachiteingestion-pa.googleapis.com/v2"
+- url: "https://{region}-malachiteingestion-pa.googleapis.com/v2"
+  variables:
+    region:
+      default: europe
+      enum:
+      - northamerica-northeast2
+      - me-central2
+      - me-central1
+      - europe
+      - europe-west3
+      - europe-west2
+      - asia-south1
+      - asia-southeast1
+      - australia-southeast1
+      - me-west1
+      - asia-northeast1
+      - europe-west12
+      - europe-west6
+  /unstructuredlogentries:batchCreate:
+    post:
+      operationId: BatchCreateUnstructuredLogEntries
+      requestBody:
+        description: Log batch object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LogEntry"
+      responses:
+        200:
+          description: Empty response
+      tags:
+      - BatchCreateUnstructuredLogEntries
+components:
+  schemas:
+    LogEntry:
+      properties:
+        customer_id:
+          type: string
+        log_type:
+          type: string
+        namespace:
+          type: string
+        entries:
+          items:
+            $ref: "#/components/schemas/Log"
+          type: array
+        labels:
+          items:
+            additionalProperties:
+              type: string
+          type: array
+      required:
+      - customer_id
+      - log_type
+      - entries
+    Log:
+      properties:
+        log_text:
+          type: string
+        ts_epoch_microseconds:
+          type: integer
+          format: int64
+        ts_rfc3339:
+          type: string

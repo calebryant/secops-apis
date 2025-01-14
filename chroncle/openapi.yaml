@@ -1,0 +1,913 @@
+openapi: 3.1.0
+info:
+  description: Chronicle API Specification
+  title: Chronicle API
+  version: v1alpha
+externalDocs:
+  url: https://cloud.google.com/chronicle/docs/reference/rest
+servers:
+- url: "https://{location}-chronicle.googleapis.com/v1alpha/projects/{project}/locations/{location}"
+  variables:
+    location:
+      default: us
+      enum:
+      - us
+      - northamerica-northeast2
+      - europe
+      - asia-southeast1
+      - europe-west2
+      - australia-southeast1
+      - me-west1
+      - europe-west3
+      - europe-west6
+      - me-central2
+      - asia-south1
+      - asia-northeast1
+      - me-central1
+      - europe-west12
+    project:
+      default: foresiteattacklab-chronicle
+      description: GCP project name or number
+paths:
+  # instances API
+  /instances/{instance}:
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances/get
+      operationId: GetInstance
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      responses:
+        200:
+          $ref: '#/components/responses/Instance'
+      summary: Gets an Instance
+      tags:
+      - Instances
+  /instances/{instance}:udmSearch:
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances/udmSearch
+      operationId: UdmSearch
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - name: query
+        in: query
+        schema:
+          type: string
+      - name: timeRange.start_time
+        in: query
+        schema:
+          $ref: '#/components/schemas/TimeStamp'
+      - name: timeRange.end_time
+        in: query
+        schema:
+          $ref: '#/components/schemas/TimeStamp'
+      - name: limit
+        in: query
+        schema:
+          type: string
+      responses:
+        200:
+          $ref: '#/components/responses/UdmSearch'
+      summary: Performs a UDM search that returns matching events for the query.
+      tags:
+      - Instances
+  /instances/{instance}:searchRawLogs:
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances/searchRawLogs
+      operationId: SearchRawLogs
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      requestBody:
+        $ref: '#/components/requestBodies/SearchRawLogs'
+      responses:
+        200:
+          $ref: '#/components/responses/UdmSearch'
+      summary: Performs a UDM search that returns matching events for the query.
+      tags:
+      - Instances
+  # feeds API
+  /instances/{instance}/feeds:
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.feeds/list
+      operationId: ListFeeds
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/PageSizeQueryParam'
+      - $ref: '#/components/parameters/PageTokenQueryParam'
+      responses:
+        200:
+          $ref: '#/components/responses/ListFeeds'
+      summary: Lists all feeds
+      tags:
+      - Feeds
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.feeds/create
+      operationId: CreateFeed
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateFeed'
+      responses:
+        200:
+          $ref: '#/components/responses/Feed'
+      summary: Creates a feed
+      tags:
+      - Feeds
+  /instances/{instance}/feeds/{feed}:
+    get:
+      externalDocs:
+        url: https:/cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.feeds/get
+      operationId: GetFeed
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/FeedPathParam'
+      responses:
+        200:
+          $ref: '#/components/responses/Feed'
+      summary: Gets a feed
+      tags:
+      - Feeds
+    delete:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.feeds/delete
+      operationId: DeleteFeed
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/FeedPathParam'
+      responses:
+        200:
+          description: OK
+      summary: Deletes a feed
+      tags:
+      - Feeds
+  /instances/{instance}/feeds/{feed}:disable:
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.feeds/disable
+      operationId: DisableFeed
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/FeedPathParam'
+      responses:
+        200:
+          $ref: '#/components/responses/Feed'
+      summary: Disable feed for ingestion. Make FeedState ARCHIVED.
+      tags:
+      - Feeds
+  /instances/{instance}/feeds/{feed}:enable:
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.feeds/enable
+      operationId: EnableFeed
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/FeedPathParam'
+      responses:
+        200:
+          $ref: '#/components/responses/Feed'
+      summary: Enable feed for ingestion.
+      tags:
+      - Feeds
+  # log types API
+  /instances/{instance}/logTypes:
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes/list
+      operationId: ListLogTypes
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/PageSizeQueryParam'
+      - $ref: '#/components/parameters/PageTokenQueryParam'
+      responses:
+        200:
+          $ref: '#/components/responses/ListLogTypes'
+      summary: Lists all LogTypes
+      tags:
+      - LogTypes
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes/create
+      operationId: CreateLogType
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/PageSizeQueryParam'
+      - $ref: '#/components/parameters/PageTokenQueryParam'
+      - name: logTypeId
+        in: query
+        schema:
+          type: string
+      responses:
+        200:
+          $ref: '#/components/responses/LogType'
+      summary: Create a log type
+      tags:
+      - LogTypes
+  /instances/{instance}/logTypes/{LogType}:
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes/get
+      operationId: GetLogType
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      responses:
+        200:
+          $ref: '#/components/responses/LogType'
+      summary: Gets a log type
+      tags:
+      - LogTypes
+  /instances/{instance}/logTypes/{logType}:runParser:
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes/runParser
+      operationId: RunParser
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      requestBody:
+        $ref: '#/components/requestBodies/RunParser'
+      responses:
+        200:
+          $ref: '#/components/responses/RunParser'
+      summary: Run a parser on sample logs
+      tags:
+      - LogTypes
+  # logs API
+  /instances/{instance}/logTypes/{logType}/logs:
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.logs/list
+      operationId: ListLogs
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/PageSizeQueryParam'
+      - $ref: '#/components/parameters/PageTokenQueryParam'
+      - $ref: '#/components/parameters/FilterQueryParam'
+      responses:
+        200:
+          $ref: '#/components/responses/ListLogs'
+      summary: Lists all Logs
+      tags:
+      - Logs
+  /instances/{instance}/logTypes/{logType}/logs:import:
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.logs/import
+      operationId: ImportLogs
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      requestBody:
+        $ref: '#/components/requestBodies/ImportLogs'
+      responses:
+        200:
+          description: OK
+      summary: Import log telemetry
+      tags:
+      - Logs
+  # parsers API
+  /instances/{instance}/logTypes/{logType}/parsers:
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parsers/list
+      operationId: ListParsers
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/PageSizeQueryParam'
+      - $ref: '#/components/parameters/PageTokenQueryParam'
+      - $ref: '#/components/parameters/FilterQueryParam'
+      responses:
+        200:
+          $ref: '#/components/responses/ListParsers'
+      summary: List all parsers
+      tags:
+      - Parsers
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parsers/create
+      operationId: CreateParser
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateParser'
+      responses:
+        200:
+          $ref: '#/components/responses/Parser'
+      summary: Create a parser
+      tags:
+      - Parsers
+  /instances/{instance}/logTypes/{logType}/parsers/{parser}:
+    delete:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parsers/delete
+      operationId: DeleteParser
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - name: force
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/ParserPathParam'
+      responses:
+        200:
+          description: OK
+      summary: Delete a parser
+      tags:
+      - Parsers
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parsers/get
+      operationId: GetParser
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/ParserPathParam'
+      responses:
+        200:
+          $ref: '#/components/responses/Parser'
+      summary: Get a parser
+      tags:
+      - Parsers
+  /instances/{instance}/logTypes/{logType}/parsers/{parser}:activate:
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parsers/activate
+      operationId: ActivateParser
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/ParserPathParam'
+      responses:
+        200:
+          description: OK
+      summary: ActivateParser switches the customer to use requested parser, This will set the Parser state to ACTIVE
+      tags:
+      - Parsers
+  /instances/{instance}/logTypes/{logType}/parsers/{parser}:deactivate:
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parsers/deactivate
+      operationId: DeactivateParser
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/ParserPathParam'
+      responses:
+        200:
+          description: OK
+      summary: DeactivateParser deactivates the requested parser, and activates the prebuilt release parser
+      tags:
+      - Parsers
+  # parser extensions API
+  /instances/{instance}/logTypes/{logType}/parserExtensions:
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parserExtensions/list
+      operationId: ListParserExtensions
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/PageSizeQueryParam'
+      - $ref: '#/components/parameters/PageTokenQueryParam'
+      responses:
+        200:
+          $ref: '#/components/responses/ListParserExtensions'
+      summary: List all parser extensions
+      tags:
+      - ParserExtensions
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parserExtensions/create
+      operationId: CreateParserExtension
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateParserExtension'
+      responses:
+        200:
+          $ref: '#/components/responses/ParserExtension'
+      summary: Create a parser extension
+      tags:
+      - ParserExtensions
+  /instances/{instance}/logTypes/{logType}/parserExtensions/{parserExtension}:
+    delete:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parserExtensions/delete
+      operationId: DeleteParserExtension
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/ParserExtensionPathParam'
+      responses:
+        200:
+          description: OK
+      summary: Delete a parser extension
+      tags:
+      - ParserExtensions
+    get:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parserExtensions/get
+      operationId: GetParserExtension
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/ParserExtensionPathParam'
+      responses:
+        200:
+          $ref: '#/components/responses/ParserExtension'
+      summary: Get a parser extension
+      tags:
+      - ParserExtensions
+  /instances/{instance}/logTypes/{logType}/parserExtensions/{parserExtension}:activate:
+    post:
+      externalDocs:
+        url: https://cloud.google.com/chronicle/docs/reference/rest/v1alpha/projects.locations.instances.logTypes.parserExtensions/activate
+      operationId: ActivateParserExtension
+      parameters:
+      - $ref: '#/components/parameters/InstancePathParam'
+      - $ref: '#/components/parameters/LogTypePathParam'
+      - $ref: '#/components/parameters/ParserExtensionPathParam'
+      responses:
+        200:
+          description: OK
+      summary: ActivateParserExtension switches the customer to use requested parser extension, This will set the extension state to ACTIVE
+      tags:
+      - ParserExtensions
+components:
+  parameters:
+    InstancePathParam:
+      description: Instance ID
+      name: instance
+      required: true
+      in: path
+      schema:
+        type: string
+        default: 20473641-8eb0-49ad-a24c-e5534c4bc5e1
+    FeedPathParam:
+      description: Feed ID
+      required: true
+      in: path
+      name: feed
+      schema:
+        type: string
+    LogTypePathParam:
+      description: The SecOps log type ID
+      required: true
+      in: path
+      name: logType
+      schema:
+        type: string
+    ParserPathParam:
+      description: The SecOps parser ID
+      required: true
+      in: path
+      name: parser
+      schema:
+        type: string
+    ParserExtensionPathParam:
+      description: The SecOps parser extension ID
+      required: true
+      in: path
+      name: parserExtension
+      schema:
+        type: string
+    PageSizeQueryParam:
+      in: query
+      name: pageSize
+      schema:
+        type: string
+    PageTokenQueryParam:
+      in: query
+      name: pageToken
+      schema:
+        type: string
+    FilterQueryParam:
+      in: query
+      name: filter
+      schema:
+        type: string
+  requestBodies:
+    RunParser:
+      content:
+        application/json:
+          schema:
+            properties:
+              parser:
+                $ref: '#/components/schemas/Parser'
+              parserExtension:
+                $ref: '#/components/schemas/ParserExtension'
+              log:
+                items:
+                  type: string
+                  contentEncoding: base64
+                type: array
+              statedumpAllowed:
+                type: boolean
+            required:
+            - parser
+            - log
+          example:
+            parser:
+              cbn: "YmFzZTY0IHRleHQK"
+            parserExtension:
+              cbnSnippet: "YmFzZTY0IHRleHQK"
+            log:
+            - "YmFzZTY0IHRleHQK"
+            allowStatedump: true
+      description: Run parser request
+      required: true
+    ImportLogs:
+      content:
+        application/json:
+          schema:
+            properties:
+              hint:
+                type: string
+              inlineSource:
+                $ref: '#/components/schemas/LogsInlineSource'
+            required:
+            - inlineSource
+          example:
+            inlineSource:
+              logs:
+                data: YmFzZTY0IHRleHQK
+                logEntryTime: "2024-01-01T00:00:00Z"
+                collectionTime: "2024-01-01T00:00:00Z"
+              forwarder: projects/foresiteattacklab-chronicle/locations/us/instances/20473641-8eb0-49ad-a24c-e5534c4bc5e1/forwarders/08786823-ea41-4997-8e2d-a9cdd26cf43c
+      description: Import logs request
+      required: true
+    CreateParser:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Parser'
+          example:
+            cbn: "YmFzZTY0IHRleHQK"
+      description: Instance of a parser resource
+      required: true
+    CreateParserExtension:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ParserExtension'
+          example:
+            cbnSnippet: "YmFzZTY0IHRleHQK"
+      description: Instance of a parser extension resource
+      required: true
+    CreateFeed:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Feed'
+      description: Instance of a feed resource
+      required: true
+    SearchRawLogs:
+      content:
+        application/json:
+          schema:
+            properties:
+              baselineQuery:
+                type: string
+              baselineTimeRange:
+                $ref: '#/components/schemas/Interval'
+              snapshotQuery:
+                type: string
+              snapshotTimeRange:
+                $ref: '#/components/schemas/Interval'
+              caseSensitive:
+                type: boolean
+              logTypes:
+                items:
+                  $ref: '#/components/schemas/LogType'
+                type: array
+              maxAggregationsPerField:
+                type: integer
+              pageSize:
+                type: integer
+  responses:
+    Instance:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Instance'
+      description: OK
+    UdmSearch:
+      content:
+        application/json:
+          schema:
+            properties:
+              events:
+                items:
+                  $ref: '#/components/schemas/Event'
+                type: array
+              moreDataAvailable:
+                type: string
+      description: OK
+    LogType:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LogType'
+      description: OK
+    ListLogTypes:
+      content:
+        application/json:
+          schema:
+            properties:
+              logTypes:
+                items:
+                  $ref: '#/components/schemas/LogType'
+                type: array
+              nextPageToken:
+                type: string
+      description: OK
+    ListLogs:
+      content:
+        application/json:
+          schema:
+            properties:
+              logs:
+                items:
+                  $ref: '#/components/schemas/Log'
+                type: array
+              nextPageToken:
+                type: string
+      description: OK
+    RunParser:
+      content:
+        application/json:
+          schema:
+            properties:
+              runParserResults:
+                items:
+                  $ref: '#/components/schemas/ParserLogResult'
+                type: array
+          example:
+            runParserResults:
+              log: "YmFzZTY0IHRleHQK"
+              parsedEvents:
+                events:
+                - event:
+                    udm:
+                      metadata:
+                        event_type: "GENERIC_EVENT"
+      description: OK
+    Feed:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Feed'
+      description: OK
+    Parser:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Parser'
+      description: OK
+    ListParsers:
+      content:
+        application/json:
+          schema:
+            properties:
+              parsers:
+                items:
+                  $ref: '#/components/schemas/Parser'
+                type: array
+              nextPageToken:
+                type: string
+      description: OK
+    ParserExtension:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ParserExtension'
+      description: OK
+    ListParserExtensions:
+      content:
+        application/json:
+          schema:
+            properties:
+              parserExtensions:
+                items:
+                  $ref: '#/components/schemas/ParserExtension'
+                type: array
+              nextPageToken:
+                type: string
+      description: OK
+    ListFeeds:
+      content:
+        application/json:
+          schema:
+            properties:
+              feeds:
+                items:
+                  $ref: '#/components/schemas/Feed'
+                type: array
+              nextPageToken:
+                type: string
+      description: OK
+  schemas:
+    Instance:
+      properties:
+        name:
+          type: string
+    Log:
+      properties:
+        name:
+          type: string
+        data:
+          type: string
+          contentEncoding: base64
+        logEntryTime:
+          type: string
+        collectionTime:
+          type: string
+        environmentNamespace:
+          type: string
+        labels:
+          $ref: '#/components/schemas/LogLabel'
+      required:
+      - data
+    LogLabel:
+      properties:
+        value:
+          type: string
+        rbacEnabled:
+          type: boolean
+    LogType:
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        golden:
+          type: boolean
+    ParserLogResult:
+      properties:
+        log:
+          type: string
+        statedumpResults:
+          items:
+            $ref: '#/components/schemas/StatedumpResult'
+          type: array
+        parsedEvents:
+          $ref: '#/components/schemas/ParsedEvents'
+        error:
+          $ref: '#/components/schemas/Status'
+    ParsedEvents:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/ParsedEvent'
+          type: array
+    ParsedEvent:
+      properties:
+        event:
+          type: object
+        entity:
+          type: object
+    StatedumpResult:
+      properties:
+        label:
+          type: string
+        statedumpResult:
+          type: string
+    ParserExtension:
+      properties:
+        name:
+          type: string
+        state:
+          type: string
+        createTime:
+          type: string
+        log:
+          type: string
+        extensionValidationReport:
+          type: string
+        validationReport:
+          type: string
+        stateLastChangedTime:
+          type: string
+        lastLiveTime:
+          type: string
+        cbnSnippet:
+          type: string
+          contentEncoding: base64
+        fieldExtraxtors:
+          type: object
+    Parser:
+      properties:
+        name:
+          type: string
+        creator:
+          $ref: '#/components/schemas/Creator'
+        createTime:
+          type: string
+        changelogs:
+          $ref: '#/components/schemas/Changelogs'
+        type:
+          type: string
+        state:
+          type: string
+        validationReport:
+          type: string
+        validatedOnEmptyLogs:
+          type: boolean
+        cbn:
+          type: string
+          contentEncoding: base64
+        lowCode:
+          type: object
+        releaseStage:
+          type: string
+        validationStage:
+          type: string
+    Creator:
+      properties:
+        customer:
+          type: string
+        author:
+          type: string
+        source:
+          type: string
+    Changelogs:
+      properties:
+        entries:
+          items:
+            $ref: '#/components/schemas/ChangelogEntry'
+          type: array
+    ChangelogEntry:
+      properties:
+        createTime:
+          type: string
+        changeMessage:
+          type: string
+    Status:
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        details:
+          items:
+            type: object
+          type: array
+    LogsInlineSource:
+      properties:
+        logs:
+          items:
+            $ref: '#/components/schemas/Log'
+          type: array
+        forwarder:
+          type: string
+        sourceFilename:
+          type: string
+      required:
+      - logs
+      - forwarder
+    Feed:
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        details:
+          type: object
+        state:
+          type: string
+        failureMsg:
+          type: string
+        readOnly:
+          type: boolean
+    Event:
+      properties:
+        name:
+          type: string
+        udm:
+          type: object
+    Interval:
+      properties:
+        startTime:
+          $ref: '#/components/schemas/TimeStamp'
+        endTime:
+          $ref: '#/components/schemas/TimeStamp'
+    TimeStamp:
+      type: string
+      format: date
+      default: "2024-01-01T00:00:00Z"
+  securitySchemes:
+    http:
+      type: http
+      scheme: bearer
+security:
+  - http: []

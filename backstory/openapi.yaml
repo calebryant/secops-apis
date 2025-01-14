@@ -1,0 +1,97 @@
+openapi: 3.1.0
+info:
+  description: Backstory API Specification
+  title: Backstory API
+  version: v1
+servers:
+- url: "https://backstory.googleapis.com/v1"
+- url: "https://{region}-backstory.googleapis.com/v1"
+  variables:
+    region:
+      default: europe
+      enum:
+      - europe
+      - europe-west2
+      - asia-southeast1
+paths:
+  /tools/cbnParsers:
+    get:
+      operationId: ListParsers
+      responses:
+        200:
+          description: List of parsers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListParsersResponse"
+      tags:
+      - cbnParsers
+  /tools/cbnParsers/{logType}:
+    parameters:
+      - name: logType
+        in: path
+        schema:
+          type: string
+    get:
+      operationId: GetParser
+      responses:
+        200:
+          description: Parser config
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Parser"
+      tags:
+      - cbnParsers
+  /partner/customer/listcustomers:
+    get:
+      operationId: ListCustomers
+      responses:
+        200:
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListCustomersResponse"
+      tags:
+      - customer
+components:
+  schemas:
+    Customer:
+      properties:
+        id:
+          type: string
+        customerId:
+          type: string
+        customerCode:
+          type: string
+        customerName:
+          type: string
+    Parser:
+      properties:
+        config:
+          type: string
+        logType:
+          type: string
+    ListParsersResponse:
+      properties:
+        cbnParsers:
+          items:
+            $ref: "#/components/schemas/Parser"
+          type: array
+    ListCustomersResponse:
+      properties:
+        customers:
+          items:
+            $ref: "#/components/schemas/Customer"
+          type: array
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth2.googleapis.com/token
+          scopes:
+            https://www.googleapis.com/auth/cloud-platform: ""
+security:
+  - oauth2: []
